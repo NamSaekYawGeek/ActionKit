@@ -10,7 +10,7 @@
 
 - 当前交付环境为 Linux，无法执行 Apple Xcode、SwiftUI、App Intents 编译或 iOS 真机安装；**不能将代码检查视为 iOS 编译成功**。
 - 工程 YAML、工作流 YAML、Info.plist 与打包脚本已做语法检查。
-- 已在 Linux 的 Swift 6.0.3 工具链上编译 Foundation 核心库并运行单元测试；这验证核心逻辑，不覆盖 Apple 专有框架。SwiftUI / App Intents 源码另做了 Swift 语法解析，仍需 macOS SDK 的完整类型检查和元数据编译。
+- 已在 Linux 的 Swift 6.0.3 工具链上编译 Foundation 核心库，**49 项单元测试通过**；覆盖核心处理、网络状态、取消与响应大小限制。这不覆盖 Apple 专有框架。SwiftUI / App Intents 源码另做了 Swift 语法解析，仍需 macOS SDK 的完整类型检查和元数据编译。
 - GitHub Actions 将在 macOS 上先运行核心处理测试，再实际编译 arm64 真机应用。只有编译成功、App Intents 元数据存在且 IPA 校验通过，才上传 IPA。
 - 当前尚未运行远程 GitHub Actions，未产生已验证的真机 IPA。可将完整仓库提交到 GitHub 后按下文触发构建。
 - **尚未真机验证**：iPhone 13 / iOS 18.3.2 安装和启动、七个操作的索引与搜索、魔法变量传递、后台与锁屏执行、SideStore 重签后元数据发现、真实微信网页抓取、真实微信 Ticket 有效性、支付宝真实分享链接兼容性、VoiceOver 和不同屏幕布局。详见文末验收清单。
@@ -83,6 +83,8 @@ URL 组件编码示例：`你好 & a+b` → `%E4%BD%A0%E5%A5%BD%20%26%20a%2Bb`�
 参数名、参数值、path 和 fragment 严格按 UTF-8 百分号解码一次；`+` 保留为加号。参数数组保持原始顺序与重复项，区分没有等号的参数（`null`）与空字符串。嵌套的 `query` 参数仍是字符串，不自动递归解析或反复解码；需要时可显式接上 URL 解码操作。
 
 HTML 提取支持静态的引号包围 `url_scheme` 属性或赋值、常用 JS 字符转义（包括 `\xNN` 和 `\uNNNN`）、数字 HTML 实体和 `amp` / `quot` / `apos` / `lt` / `gt`。不执行 JavaScript，不支持通过函数或字符串拼接动态生成 Scheme。
+
+微信网络操作只接受 `wxmpurl.cn` 及其子域名的 HTTP(S) 输入，将 HTTP 输入升级为 HTTPS；拒绝用户凭证和非标准端口。最多允许 5 次 HTTPS 重定向，目标仅限 `wxmpurl.cn` 及其子域名、`mp.weixin.qq.com`。单次请求超时 15 秒，整个资源超时 30 秒，响应按流读取且上限 2 MiB；仅接受 UTF-8 HTML/纯文本，或未声明 MIME 的响应。使用临时 URLSession，不保存 Cookie 或磁盘缓存。若真实链接跳转到其它合法的新域名，将明确报错，需要确认后更新允许列表。
 
 ## 项目结构
 
