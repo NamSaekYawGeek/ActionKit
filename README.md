@@ -111,13 +111,13 @@ scripts/verify-ipa.py           IPA、架构、系统版本与元数据校验
 
 1. 将此目录完整提交到自己的 GitHub 仓库，确保 `.github/workflows/build-ipa.yml` 也已提交。
 2. 在仓库 **Actions → Build unsigned ActionKit IPA → Run workflow** 手动运行。向 `main` / `master` 推送或提交 Pull Request 也会触发。
-3. 工作流使用 `macos-15`，明确选择 `/Applications/Xcode_16.2.app`，安装 XcodeGen，执行 `swift test --parallel`，再生成 Xcode 工程并编译。
+3. 工作流使用 `macos-15-intel`，明确选择 `/Applications/Xcode_16.2.app`，安装 XcodeGen，执行 `swift test --parallel`，再生成 Xcode 工程并编译。
 4. 成功后下载 **ActionKit-unsigned-ipa** Artifact，解压得到 `ActionKit.ipa` 和 SHA-256 文件。Artifact 本身的 ZIP 不是 IPA，不要直接交给 SideStore。
 5. 若构建失败，查看任务日志及 **ActionKit-build-diagnostics** 中的 `xcodebuild.log` / `.xcresult`。不要使用失败任务留下的不完整文件。
 
 工作流只需要 `contents: read`，不需要证书、描述文件、Apple ID、开发者 Team ID 或仓库 Secrets。没有发布到 App Store、TestFlight 或 GitHub Releases 的步骤。GitHub 托管 runner 的用量仍受 GitHub 账号配额约束。
 
-`macos-14` 已在 2026 年 11 月停止支持，因此使用 `macos-15`。如 GitHub 后续移除 Xcode 16.2，应根据 [runner 官方软件清单](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md) 更新工作流的 `DEVELOPER_DIR`；保持 deployment target 为 iOS 18.0，并重新完成兼容性验证。
+`macos-14` 已在 2026 年 11 月停止支持，因此使用 `macos-15-intel`。如 GitHub 后续移除 Xcode 16.2，应根据 [runner 官方软件清单](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md) 更新工作流的 `DEVELOPER_DIR`；保持 deployment target 为 iOS 18.0，并重新完成兼容性验证。
 
 ### 元数据与未签名打包
 
