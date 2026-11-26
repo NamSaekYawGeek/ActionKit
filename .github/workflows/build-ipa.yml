@@ -1,0 +1,61 @@
+name: Build unsigned ActionKit IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: actionkit-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # macos-14 was retired in November 2026. macos-15 includes Xcode 16.2.
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+
+      - name: Check Xcode and install XcodeGen
+        run: |
+          test -d "$DEVELOPER_DIR" || { echo "Xcode 16.2 is missing from this runner image."; exit 1; }
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          brew install xcodegen
+          xcodegen --version
+
+      - name: Test Foundation processing code
+        run: swift test --parallel
+
+      - name: Build arm64 device application and unsigned IPA
+        run: bash scripts/build-ipa.sh
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ActionKit-unsigned-ipa
+          path: |
+            dist/ActionKit.ipa
+            dist/ActionKit.ipa.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload compiler diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ActionKit-build-diagnostics
+          path: |
+            build/xcodebuild.log
+            build/*.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
