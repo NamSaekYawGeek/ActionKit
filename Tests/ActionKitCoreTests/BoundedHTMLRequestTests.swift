@@ -65,7 +65,8 @@ final class BoundedHTMLRequestTests: XCTestCase {
     func testHTTPFailurePreservesStatusCode() async {
         do {
             _ = try await loadStub { stub in
-                stub.respond(status: 429, headers: ["Content-Type": "text/html"])
+                stub.respond(status: 429, headers: ["Content-Type": "text/html", "Content-Length": "0"])
+                stub.complete()
             }
             XCTFail("HTTP failure must not return a successful body")
         } catch ActionKitError.httpStatus(let status) {
@@ -78,9 +79,14 @@ final class BoundedHTMLRequestTests: XCTestCase {
     func testNonHTMLResponseIsRejected() async {
         do {
             _ = try await loadStub { stub in
-                stub.respond(status: 200, headers: ["Content-Type": "image/png"])
+                // Darwin may wait for sniffable body bytes before delivering a response.
+                // Model a complete binary response rather than an indefinitely open stream.
+                let payload = Data([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+                stub.respond(status: 200, headers: ["Content-Type": "image/png", "Content-Length": String(payload.count)])
+                stub.send(payload)
+                stub.complete()
             }
-            XCTFail("Binary response must fail before reading a body")
+            XCTFail("Binary response must not return a successful HTML body")
         } catch ActionKitError.invalidHTML {
             // Expected.
         } catch {
