@@ -126,7 +126,7 @@ scripts/verify-ipa.py           IPA、架构、系统版本与元数据校验
 脚本完整复制 `ActionKit.app` 到 `Payload/ActionKit.app` 后 ZIP 打包。校验脚本要求：
 
 - 应用为 iOS 18.0 起的 `iphoneos` arm64 Mach-O 二进制；
-- 包内有非空 `Metadata.appintents/actionsdata`；
+- 包内保留非空的 `Metadata.appintents` 及其中的 `*.actionsdata`（或 `actionsdata`）编译文件；
 - 不含 `.appex`、`_CodeSignature` 或 `embedded.mobileprovision`。
 
 元数据存在是快捷指令可发现操作的必要条件之一，**不等于已证明 SideStore 重签后系统完成索引**。该部分仍需真机验收。

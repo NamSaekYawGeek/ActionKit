@@ -23,7 +23,9 @@ struct GuideView: View {
             }
 
             Section("示例：读取支付宝参数") {
-                Text("把支付宝链接传给“解析支付宝链接参数（ActionKit）”，然后添加系统“从输入中获取词典”，把 JSON 结果转换成词典后读取字段。重复参数会保留，具体 JSON 结构见项目 README。")
+                Text("把支付宝链接传给“解析支付宝链接参数（ActionKit）”，然后添加系统“从输入中获取词典”。读取 parameters 键，就能得到按原始顺序排列的参数列表；每项包含 name 和 value，重复参数也会保留。")
+                    .font(.subheadline)
+                Text("例如读取 App ID：对 parameters 列表使用“重复每一项”，找到 name 等于 appId 的项目，再读取它的 value。query 参数内的嵌套内容会作为文本返回，不会自动拆分。")
                     .font(.subheadline)
                 Text("URL 编码与解码各自是一个独立操作。它们针对单个参数值，解码一次只去除一层百分号编码。")
                     .font(.subheadline)

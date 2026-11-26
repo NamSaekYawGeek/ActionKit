@@ -74,7 +74,7 @@ enum Operation: String, CaseIterable, Identifiable {
         case .buildWeChat:
             "输入已有、未编码的 Ticket。操作会编码参数值并返回微信 URL Scheme，不会创建、续期或验证 Ticket。需要跳转时，请在快捷指令中连接“打开 URL”。"
         case .parseAlipay:
-            "解析链接中的查询参数并返回 JSON 文本，保留重复参数。每层只解码一次，+ 保持为 +。此操作不联网解析支付宝短链接，也不验证小程序是否可用。"
+            "解析链接中的查询参数并返回 JSON 文本，保留重复参数。外层参数只解码一次，+ 保持为 +；query 等参数中的嵌套内容仍是字符串。此操作不联网解析支付宝短链接，也不验证小程序是否可用。"
         case .encode:
             "按 UTF-8 编码单个参数值，仅保留字母、数字和 - . _ ~。请不要把编码后的完整 URL 当作可直接打开的链接。"
         case .decode:

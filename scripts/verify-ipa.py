@@ -44,7 +44,8 @@ def verify(path):
         metadata = [name for name in names if name.startswith(base + "Metadata.appintents/")
                     and not name.endswith("/") and archive.getinfo(name).file_size > 0]
         require(metadata, "未保留非空 Metadata.appintents；快捷指令可能无法发现操作。")
-        require(any(PurePosixPath(name).name == "actionsdata" for name in metadata),
+        require(any(PurePosixPath(name).name == "actionsdata" or
+                    PurePosixPath(name).suffix == ".actionsdata" for name in metadata),
                 "缺少 App Intents actionsdata 编译元数据。")
         print(json.dumps({
             "ipa": str(path),
