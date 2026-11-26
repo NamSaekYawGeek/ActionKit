@@ -12,7 +12,7 @@
 - 工程 YAML、工作流 YAML、Info.plist 与打包脚本已做语法检查。
 - 已在 Linux 的 Swift 6.0.3 工具链上编译 Foundation 核心库，**49 项单元测试通过**；覆盖核心处理、网络状态、取消与响应大小限制。这不覆盖 Apple 专有框架。SwiftUI / App Intents 源码另做了 Swift 语法解析，仍需 macOS SDK 的完整类型检查和元数据编译。
 - GitHub Actions 将在 macOS 上先运行核心处理测试，再实际编译 arm64 真机应用。只有编译成功、App Intents 元数据存在且 IPA 校验通过，才上传 IPA。
-- 当前尚未运行远程 GitHub Actions，未产生已验证的真机 IPA。可将完整仓库提交到 GitHub 后按下文触发构建。
+- 实际 macOS 编译与 IPA 产物以 [GitHub Actions 运行记录](https://github.com/NamSaekYawGeek/ActionKit/actions) 和本次 PR 的 Checks 为准；仅下载成功运行中的 Artifact。Linux 测试不代替 Xcode 构建。
 - **尚未真机验证**：iPhone 13 / iOS 18.3.2 安装和启动、七个操作的索引与搜索、魔法变量传递、后台与锁屏执行、SideStore 重签后元数据发现、真实微信网页抓取、真实微信 Ticket 有效性、支付宝真实分享链接兼容性、VoiceOver 和不同屏幕布局。详见文末验收清单。
 
 ## 操作
