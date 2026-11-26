@@ -1,0 +1,55 @@
+name: ActionKit
+options:
+  minimumXcodeGenVersion: 2.42.0
+  deploymentTarget:
+    iOS: "18.0"
+  developmentLanguage: zh-Hans
+  createIntermediateGroups: true
+  bundleIdPrefix: io.actionkit
+packages:
+  ActionKitCore:
+    path: .
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CLANG_ENABLE_MODULES: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  ActionKit:
+    type: application
+    platform: iOS
+    sources:
+      - path: ActionKit
+    dependencies:
+      - package: ActionKitCore
+        product: ActionKitCore
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.actionkit.app
+        PRODUCT_NAME: ActionKit
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_FILE: Config/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_EMIT_LOC_STRINGS: YES
+        SKIP_INSTALL: NO
+      configs:
+        Release:
+          DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+          SWIFT_OPTIMIZATION_LEVEL: "-O"
+schemes:
+  ActionKit:
+    build:
+      targets:
+        ActionKit: all
+    run:
+      config: Debug
+    archive:
+      config: Release

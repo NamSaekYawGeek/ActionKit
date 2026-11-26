@@ -1,0 +1,13 @@
+.DS_Store
+.build/
+.swiftpm/
+*.xcodeproj/
+*.xcworkspace/
+build/
+dist/
+*.ipa
+*.xcresult/
+*.xcuserstate
+xcuserdata/
+__pycache__/
+*.pyc
